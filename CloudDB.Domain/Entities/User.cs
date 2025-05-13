@@ -8,15 +8,16 @@ namespace CloudDB.Domain.Entities
         public int UserId { get; set; }
         [StringLength(50), Required]
         public string Username { get; set; }
-
-        [StringLength(50), Required]
+        [Required]
+        [StringLength(50)]
         public string Password { get; set; }
 
-        [StringLength(50), Required]
+        [Required]
+        [StringLength(50)]
         public string Email { get; set; }
         [StringLength(20)]
 
         public string Phone { get; set; }
-        //public List<Order> { get; set; }
+        public List<Order> Orders { get; set; }
     }
 }

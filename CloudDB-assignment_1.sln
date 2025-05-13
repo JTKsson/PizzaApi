@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.12.35514.174
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CloudDB.Api", "CloudDB-assignment_1\CloudDB.Api.csproj", "{AC8658FD-FEA7-4A45-931D-BD5D458B3377}"
+	ProjectSection(ProjectDependencies) = postProject
+		{9D545FA4-2C41-4B66-8614-39AB8CBF5722} = {9D545FA4-2C41-4B66-8614-39AB8CBF5722}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CloudDB.Core", "CloudDB.Core\CloudDB.Core.csproj", "{812ADA1A-C449-4D98-80E1-8D14D367BCFB}"
 EndProject

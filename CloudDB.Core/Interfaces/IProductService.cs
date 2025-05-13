@@ -1,6 +1,6 @@
 ﻿namespace CloudDB.Core.Interfaces
 {
-    public interface IUserService
+    public interface IProductService
     {
     }
 }

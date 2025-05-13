@@ -2,7 +2,7 @@
 
 namespace CloudDB.Core.Services
 {
-    public class UserService : IUserService
+    public class CategoryService : ICategoryService
     {
     }
 }

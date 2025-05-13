@@ -8,19 +8,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Data\Entities\" />
-    <Folder Include="Data\Interfaces\" />
-    <Folder Include="Data\Migrations\" />
-    <Folder Include="Data\Repos\" />
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.4">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CloudDB.Core\CloudDB.Core.csproj" />
+    <ProjectReference Include="..\CloudDB.Infrastructure\CloudDB.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

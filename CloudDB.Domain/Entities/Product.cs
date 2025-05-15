@@ -15,11 +15,3 @@ namespace CloudDB.Domain.Entities
         public ICollection<Order> Orders { get; set; } = new List<Order>();
     }
 }
-
-
-//mealId
-//mealName
-//price
-//description
-//ingredients(list)
-//mealCategory

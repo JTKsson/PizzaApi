@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using CloudDB.Infrastructure.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -12,7 +13,7 @@ namespace CloudDB.Infrastructure
         {
             var connString = configuration.GetConnectionString("DBConnString");
 
-            services.AddDbContext<CloudDBContext>(options =>
+            services.AddDbContext<ApplicationUserContext>(options =>
 
                     options.UseSqlServer(connString)
 

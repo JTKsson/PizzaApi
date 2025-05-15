@@ -6,7 +6,8 @@ namespace CloudDB.Domain.Entities
     {
         [Key]
         public int CategoryId { get; set; }
-        [StringLength(50), Required]
+        [StringLength(50)] 
+        [Required]
         public string CategoryName { get; set; }
         public List<Product> Products { get; set; }
     }

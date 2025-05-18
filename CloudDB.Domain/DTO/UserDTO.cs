@@ -17,7 +17,6 @@ namespace CloudDB.Domain.DTO
 
     public class UserUpdateDTO
     {
-        public string UserId { get; set; }
         public string Username { get; set; }
         public string Email { get; set; }
         public string Phone { get; set; }
@@ -27,5 +26,12 @@ namespace CloudDB.Domain.DTO
     {
         public string Username { get; set; }
         public string Password { get; set; }
+    }
+
+    public class UserGetDTO
+    {
+        public string Username { get; set; }
+        public string Email { get; set; }
+        public string Phone { get; set; }
     }
 }

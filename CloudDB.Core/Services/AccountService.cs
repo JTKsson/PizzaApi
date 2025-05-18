@@ -2,6 +2,11 @@
 using CloudDB.Domain.DTO;
 using CloudDB.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace CloudDB.Core.Services
 {
@@ -10,17 +15,54 @@ namespace CloudDB.Core.Services
 
         private SignInManager<ApplicationUser> _signInManager;
         private UserManager<ApplicationUser> _userManager;
+        private readonly IConfiguration _config;
 
-        public AccountService(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager)
+
+        public AccountService(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager, IConfiguration config)
         {
             _signInManager = signInManager;
             _userManager = userManager;
+            _config = config;
         }
+        public async Task<string> GenerateJwtToken(ApplicationUser user)
+        {
+            var authClaims = new List<Claim>
+    {
+                new Claim(ClaimTypes.NameIdentifier, user.Id),
+                new Claim(ClaimTypes.Name, user.UserName),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+    };
 
-        public async Task<bool> Login(UserLoginDTO user)
+            var userRoles = await _userManager.GetRolesAsync(user);
+            foreach (var role in userRoles)
+            {
+                authClaims.Add(new Claim(ClaimTypes.Role, role));
+            }
+
+            var authSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
+
+            var token = new JwtSecurityToken(
+                issuer: _config["Jwt:Issuer"],
+                audience: _config["Jwt:Audience"],
+                expires: DateTime.UtcNow.AddHours(10),
+                claims: authClaims,
+                signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
+            );
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+        public async Task<string> Login(UserLoginDTO user)
         {
             var result = await _signInManager.PasswordSignInAsync(user.Username, user.Password, false, false);
-            return result.Succeeded;
+            if (!result.Succeeded)
+                return null;
+
+            var appUser = await _userManager.FindByNameAsync(user.Username);
+            if (appUser == null)
+                return null;
+
+            return await GenerateJwtToken(appUser);
         }
 
         public async Task<bool> Register(UserCreateDTO user)
@@ -37,14 +79,12 @@ namespace CloudDB.Core.Services
             return result.Succeeded;
         }
 
-        public async Task<bool> Update(UserUpdateDTO user)
+        public async Task<bool> Update(UserUpdateDTO user, string userId)
         {
-            // Find the existing user by username
-            var existingUser = await _userManager.FindByIdAsync(user.UserId);
+            var existingUser = await _userManager.FindByIdAsync(userId);
             if (existingUser == null)
                 return false;
 
-            // Update the properties
             existingUser.Email = user.Email;
             existingUser.PhoneNumber = user.Phone;
             existingUser.UserName = user.Username;
@@ -52,6 +92,21 @@ namespace CloudDB.Core.Services
             var result = await _userManager.UpdateAsync(existingUser);
 
             return result.Succeeded;
+        }
+
+        public async Task<UserGetDTO> GetUser(string userId)
+        {
+            var authedUser = await _userManager.FindByIdAsync(userId);
+
+            if (authedUser == null)
+                return null;
+
+            return new UserGetDTO
+            {
+                Username = authedUser.UserName,
+                Email = authedUser.Email,
+                Phone = authedUser.PhoneNumber
+            };
         }
     }
 }

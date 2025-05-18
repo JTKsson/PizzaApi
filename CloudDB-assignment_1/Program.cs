@@ -5,7 +5,10 @@ using CloudDB.Infrastructure.Extensions;
 using CloudDB.Infrastructure.Identity;
 using CloudDB.Infrastructure.Interfaces;
 using CloudDB.Infrastructure.Repos;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 using System.Text.Json.Serialization;
 
 
@@ -24,23 +27,34 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
        .AddEntityFrameworkStores<ApplicationUserContext>()
 .AddDefaultTokenProviders();
 
-// Core Services
-//builder.Services.AddScoped<IProductService, ProductService>();
-//builder.Services.AddScoped<IIngredientService, IngredientService>();
-//builder.Services.AddScoped<IOrderService, OrderService>();
-//builder.Services.AddScoped<IUserService, UserService>();
-//builder.Services.AddScoped<ICategoryService, CategoryService>();
-builder.Services.AddCoreDI();
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = builder.Configuration["Jwt:Issuer"],
+        ValidAudience = builder.Configuration["Jwt:Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(
+            Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+    };
+});
 
-// Infrastructure Repositories
-//builder.Services.AddScoped<IProductRepo, ProductRepo>();
-//builder.Services.AddScoped<ICategoryRepo, CategoryRepo>();
-//builder.Services.AddScoped<IIngredientRepo, IngredientRepo>();
-//builder.Services.AddScoped<IOrderRepo, OrderRepo>();
-//builder.Services.AddScoped<IUserRepo, UserRepo>();
+
+builder.Services.AddCoreDI();
 builder.Services.AddInfrastructureDI();
 
 var app = builder.Build();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.UseRouting();
 app.UseEndpoints(endpoints => endpoints.MapControllers());

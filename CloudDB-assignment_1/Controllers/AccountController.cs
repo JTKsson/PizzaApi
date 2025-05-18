@@ -2,6 +2,7 @@
 using CloudDB.Domain.DTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace CloudDB_assignment_1.Controllers
 {
@@ -15,23 +16,20 @@ namespace CloudDB_assignment_1.Controllers
         {
             _accountService = accountService;
         }
+
         [HttpPost]
         [AllowAnonymous]
         [Route("api/login")]
         public async Task<IActionResult> Login(UserLoginDTO user)
         {
-            var result = await _accountService.Login(user);
+            var token = await _accountService.Login(user);
 
-            if (result)
-            {
-                return Ok("Inloggad");
-
-            }
-            else
+            if (string.IsNullOrEmpty(token))
             {
                 return Unauthorized();
             }
 
+            return Ok(new { token });
         }
 
         [HttpPost]
@@ -39,7 +37,7 @@ namespace CloudDB_assignment_1.Controllers
         [Route("api/register")]
         public async Task<IActionResult> Register(UserCreateDTO user)
         {
-            var result = await _accountService.Register(user); //GLÖM INTE AWAIT!
+            var result = await _accountService.Register(user);
 
             if (result)
             {
@@ -53,11 +51,15 @@ namespace CloudDB_assignment_1.Controllers
         }
 
         [HttpPost]
-        [AllowAnonymous]
+        [Authorize]
         [Route("api/update-user")]
         public async Task<IActionResult> Update(UserUpdateDTO user)
         {
-            var result = await _accountService.Update(user);
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (userId == null) return Unauthorized("No User ID found");
+
+            var result = await _accountService.Update(user, userId);
 
             if (result)
             {
@@ -68,6 +70,20 @@ namespace CloudDB_assignment_1.Controllers
             {
                 return BadRequest();
             }
+        }
+
+        [HttpGet("api/get-user")]
+        [Authorize]
+        public async Task<IActionResult> GetUser()
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            var result = await _accountService.GetUser(userId);
+
+            if (result == null)
+                return NotFound("User not found");
+
+            return Ok(result);
         }
 
 

@@ -3,8 +3,6 @@ using CloudDB.Domain.Entities;
 using CloudDB.Infrastructure;
 using CloudDB.Infrastructure.Extensions;
 using CloudDB.Infrastructure.Identity;
-using CloudDB.Infrastructure.Interfaces;
-using CloudDB.Infrastructure.Repos;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
@@ -27,6 +25,8 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
        .AddEntityFrameworkStores<ApplicationUserContext>()
 .AddDefaultTokenProviders();
 
+
+//Flytta till Extension när flytt till Azure
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -53,10 +53,10 @@ builder.Services.AddInfrastructureDI();
 
 var app = builder.Build();
 
+app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.UseRouting();
 app.UseEndpoints(endpoints => endpoints.MapControllers());
 
 

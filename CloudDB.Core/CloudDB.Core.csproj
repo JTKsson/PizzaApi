@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CloudDB.Domain\CloudDB.Domain.csproj" />
+    <ProjectReference Include="..\CloudDB.Infrastructure\CloudDB.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

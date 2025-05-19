@@ -39,15 +39,9 @@ namespace CloudDB_assignment_1.Controllers
         {
             var result = await _accountService.Register(user);
 
-            if (result)
-            {
-                return Ok("Skapad");
+            if (!result) return BadRequest();
 
-            }
-            else
-            {
-                return BadRequest();
-            }
+            return Ok("Skapad");
         }
 
         [HttpPost]
@@ -78,14 +72,13 @@ namespace CloudDB_assignment_1.Controllers
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
+            if (userId == null) return Unauthorized("No User ID found");
+
             var result = await _accountService.GetUser(userId);
 
-            if (result == null)
-                return NotFound("User not found");
+            if (result == null) return NotFound("Username or password incorrect");
 
             return Ok(result);
         }
-
-
     }
 }

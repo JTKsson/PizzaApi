@@ -14,6 +14,7 @@ namespace CloudDB.Infrastructure.Identity
         public virtual DbSet<Ingredient> Ingredients { get; set; }
         public virtual DbSet<Order> Orders { get; set; }
         public virtual DbSet<Product> Products { get; set; }
+        public virtual DbSet<ApplicationUser> Users {  get; set; }
         //public virtual DbSet<User> Users { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

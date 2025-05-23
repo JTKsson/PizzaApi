@@ -1,4 +1,5 @@
-﻿using CloudDB.Domain.Entities;
+﻿using CloudDB.Domain.DTO;
+using CloudDB.Domain.Entities;
 using CloudDB.Infrastructure.Identity;
 using CloudDB.Infrastructure.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -19,8 +20,7 @@ namespace CloudDB.Infrastructure.Repos
         public async Task AddOrder(OrderCreateDTO orderDto, string userId)
         {
             var user = await _context.Users.SingleOrDefaultAsync(u => u.Id == userId);
-            if (user == null)
-                throw new ArgumentException($"No user found with ID {userId}");
+            if (user == null) throw new ArgumentException($"No user found with ID {userId}");
 
             // Fetch products by IDs
             var products = await _context.Products
@@ -41,5 +41,32 @@ namespace CloudDB.Infrastructure.Repos
             _context.Orders.Add(order);
             await _context.SaveChangesAsync();
         }
+
+        public async Task<List<OrderGetDTO>> GetAuthUserOrders(string userId)
+        {
+            var user = await _context.Users.SingleOrDefaultAsync(u => u.Id == userId);
+            if (user == null) throw new ArgumentException($"No user found with ID {userId}");
+
+            var orders = await _context.Orders
+                .Where(o => o.User == user)
+                .Include(o => o.Products)
+                .AsNoTracking()
+                .ToListAsync();
+
+            // Map each Order to OrderGetDTO
+            var orderDtos = orders.Select(o => new OrderGetDTO
+            {
+                TotalPrice = o.TotalPrice,
+                Products = o.Products.Select(p => new ProductGetDTO
+                {
+                    ProductName = p.ProductName,
+                    ProductPrice = p.ProductPrice
+                    // Map other properties as needed
+                }).ToList()
+            }).ToList();
+
+            return orderDtos;
+        }
+
     }
 }

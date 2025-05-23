@@ -1,7 +1,5 @@
 ﻿using CloudDB.Core.Interfaces;
-using CloudDB.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using static CloudDB.Domain.DTO.OrderDTO;
@@ -29,6 +27,17 @@ namespace CloudDB_assignment_1.Controllers
 
             await _service.AddOrder(orderDto, userId);
             return Created();
+        }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> GetAuthUserOrders()
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userId == null) return Unauthorized("No authentication found");
+
+            var orders = await _service.GetAuthUserOrders(userId);
+            return Ok(orders);
         }
     }
 }

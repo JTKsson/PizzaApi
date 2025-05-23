@@ -6,5 +6,6 @@ namespace CloudDB.Infrastructure.Interfaces
     public interface IOrderRepo
     {
         Task AddOrder(OrderCreateDTO order, string userId);
+        Task<List<OrderGetDTO>> GetAuthUserOrders (string userId);
     }
 }

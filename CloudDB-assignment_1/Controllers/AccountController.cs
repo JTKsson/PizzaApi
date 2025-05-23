@@ -37,11 +37,11 @@ namespace CloudDB_assignment_1.Controllers
         [Route("api/register")]
         public async Task<IActionResult> Register(UserCreateDTO user)
         {
-            var result = await _accountService.Register(user);
+            var result = await _accountService.Register(user, "RegularUser");
 
             if (!result) return BadRequest();
 
-            return Ok("Skapad");
+            return Ok("User created");
         }
 
         [HttpPost]
@@ -79,6 +79,14 @@ namespace CloudDB_assignment_1.Controllers
             if (result == null) return NotFound("Username or password incorrect");
 
             return Ok(result);
+        }
+
+        [HttpGet("api/test-role")]
+        [Authorize(Roles = "RegularUser")]
+        public IActionResult TestRole()
+        {
+            var text = "Role works";
+            return Ok(text);
         }
     }
 }

@@ -15,14 +15,18 @@ namespace CloudDB.Core.Services
 
         private SignInManager<ApplicationUser> _signInManager;
         private UserManager<ApplicationUser> _userManager;
+        private RoleManager<IdentityRole> _roleManager;
         private readonly IConfiguration _config;
 
 
-        public AccountService(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager, IConfiguration config)
+        public AccountService(SignInManager<ApplicationUser> signInManager,
+            UserManager<ApplicationUser> userManager, IConfiguration config, 
+            RoleManager<IdentityRole> roleManager)
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _config = config;
+            _roleManager = roleManager;
         }
         public async Task<string> GenerateJwtToken(ApplicationUser user)
         {
@@ -65,7 +69,7 @@ namespace CloudDB.Core.Services
             return await GenerateJwtToken(appUser);
         }
 
-        public async Task<bool> Register(UserCreateDTO user)
+        public async Task<bool> Register(UserCreateDTO user, string role)
         {
             var newUser = new ApplicationUser()
             {
@@ -76,8 +80,20 @@ namespace CloudDB.Core.Services
 
             var result = await _userManager.CreateAsync(newUser, user.Password);
 
+            if (result.Succeeded)
+            {
+                // Ensure the role exists
+                if (!await _roleManager.RoleExistsAsync(role))
+                {
+                    await _roleManager.CreateAsync(new IdentityRole(role));
+                }
+                // Assign the role to the user
+                await _userManager.AddToRoleAsync(newUser, role);
+            }
+
             return result.Succeeded;
         }
+
 
         public async Task<bool> Update(UserUpdateDTO user, string userId)
         {

@@ -19,5 +19,10 @@ namespace CloudDB.Core.Services
         {
             await _repo.AddOrder(orderDto, userId);
         }
+
+        public async Task<List<OrderGetDTO>> GetAuthUserOrders(string userId)
+        {
+            return await _repo.GetAuthUserOrders(userId);            
+        }
     }
 }

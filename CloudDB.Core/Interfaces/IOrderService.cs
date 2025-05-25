@@ -7,5 +7,6 @@ namespace CloudDB.Core.Interfaces
     {
         Task AddOrder(OrderCreateDTO orderDto, string userId);
         Task<List<OrderGetDTO>> GetAuthUserOrders(string userId);
+        Task DeleteOrder(int orderId);
     }
 }

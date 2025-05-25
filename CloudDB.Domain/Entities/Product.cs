@@ -8,7 +8,6 @@ namespace CloudDB.Domain.Entities
         public int ProductId { get; set; }
         [StringLength(70)]
         public string ProductName { get; set; }
-
         public int ProductPrice { get; set; }
         public Category Category { get; set; }
         public ICollection<Ingredient> Ingredients { get; set; } = new List<Ingredient>();

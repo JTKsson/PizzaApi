@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CloudDB.Infrastructure
 {
-    public class CloudDBContext : DbContext
+    public class CloudDBContext_REDACTED : DbContext
     {
-        public CloudDBContext(DbContextOptions options) : base(options)
+        public CloudDBContext_REDACTED(DbContextOptions options) : base(options)
         {
         }
 

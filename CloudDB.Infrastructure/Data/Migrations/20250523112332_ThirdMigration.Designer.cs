@@ -4,16 +4,19 @@ using CloudDB.Infrastructure.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace CloudDB.Infrastructure.Migrations
+namespace CloudDB.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(ApplicationUserContext))]
-    partial class ApplicationUserContextModelSnapshot : ModelSnapshot
+    [Migration("20250523112332_ThirdMigration")]
+    partial class ThirdMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

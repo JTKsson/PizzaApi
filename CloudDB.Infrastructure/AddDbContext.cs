@@ -18,6 +18,9 @@ namespace CloudDB.Infrastructure
                     options.UseSqlServer(connString)
 
                 );
+            services.AddDbContext<ApplicationUserContext>(options =>
+                options.UseSqlServer(connString, x => x.MigrationsAssembly("CloudDB.Infrastructure"))
+);
 
             return services;
 

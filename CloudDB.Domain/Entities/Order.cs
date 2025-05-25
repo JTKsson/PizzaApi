@@ -7,7 +7,7 @@ namespace CloudDB.Domain.Entities
         [Key]
         public int OrderId { get; set; }
         public int TotalPrice { get; set; }
-        //public List<Product> Products { get; set; }
+        public bool IsDelivered { get; set; }
         public ApplicationUser User { get; set; }
         public ICollection<Product> Products { get; set; } = new List<Product>();
 

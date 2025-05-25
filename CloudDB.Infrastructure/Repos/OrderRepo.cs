@@ -22,15 +22,12 @@ namespace CloudDB.Infrastructure.Repos
             var user = await _context.Users.SingleOrDefaultAsync(u => u.Id == userId);
             if (user == null) throw new ArgumentException($"No user found with ID {userId}");
 
-            // Fetch products by IDs
             var products = await _context.Products
                 .Where(p => orderDto.ProductIds.Contains(p.ProductId))
                 .ToListAsync();
 
-            // Calculate total price
             var totalPrice = products.Sum(p => p.ProductPrice);
 
-            // Map DTO to Order entity
             var order = new Order
             {
                 User = user,
@@ -53,7 +50,6 @@ namespace CloudDB.Infrastructure.Repos
                 .AsNoTracking()
                 .ToListAsync();
 
-            // Map each Order to OrderGetDTO
             var orderDtos = orders.Select(o => new OrderGetDTO
             {
                 TotalPrice = o.TotalPrice,
@@ -61,7 +57,6 @@ namespace CloudDB.Infrastructure.Repos
                 {
                     ProductName = p.ProductName,
                     ProductPrice = p.ProductPrice
-                    // Map other properties as needed
                 }).ToList()
             }).ToList();
 

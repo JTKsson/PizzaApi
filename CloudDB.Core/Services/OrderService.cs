@@ -20,6 +20,11 @@ namespace CloudDB.Core.Services
             await _repo.AddOrder(orderDto, userId);
         }
 
+        public Task DeleteOrder(int orderId)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<List<OrderGetDTO>> GetAuthUserOrders(string userId)
         {
             return await _repo.GetAuthUserOrders(userId);            

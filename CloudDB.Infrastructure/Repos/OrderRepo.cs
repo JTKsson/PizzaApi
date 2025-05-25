@@ -71,13 +71,14 @@ namespace CloudDB.Infrastructure.Repos
             {
                 User = user,
                 Products = products,
-                TotalPrice = totalPrice
+                TotalPrice = totalPrice,
+                IsDelivered = false,
+                
             };
 
             await _context.Orders.AddAsync(order);
             await _context.SaveChangesAsync();
         }
-
 
         public async Task<List<OrderGetDTO>> GetAuthUserOrders(string userId)
         {
@@ -101,6 +102,27 @@ namespace CloudDB.Infrastructure.Repos
             }).ToList();
 
             return orderDtos;
+        }
+
+        public async Task RemoveOrder(int orderId)
+        {
+            var order = await _context.Orders.SingleOrDefaultAsync(o => o.OrderId == orderId);
+            if (order == null)
+                throw new ArgumentException($"No order found with ID {orderId}");
+
+            _context.Orders.Remove(order);
+            await _context.SaveChangesAsync();
+        }
+
+
+        public async Task ChangeOrderStatus(int orderId, bool isDelivered)
+        {
+            var order = await _context.Orders.SingleOrDefaultAsync(o => o.OrderId == orderId);
+            if (order == null)
+                throw new ArgumentException($"No order found with ID {orderId}");
+
+            order.IsDelivered = isDelivered;
+            await _context.SaveChangesAsync();
         }
 
     }

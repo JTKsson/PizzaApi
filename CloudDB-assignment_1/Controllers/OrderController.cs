@@ -19,6 +19,7 @@ namespace CloudDB_assignment_1.Controllers
 
         [HttpPost]
         [Authorize]
+        [Route("api/add-order")]
         public async Task<IActionResult> AddOrder(OrderCreateDTO orderDto)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -34,10 +35,7 @@ namespace CloudDB_assignment_1.Controllers
             {
                 await _service.AddOrder(orderDto, userId);
                 return Created();
-            }
-
-
-            
+            }            
         }
 
         [HttpGet]
@@ -50,5 +48,36 @@ namespace CloudDB_assignment_1.Controllers
             var orders = await _service.GetAuthUserOrders(userId);
             return Ok(orders);
         }
+
+        [HttpDelete("{orderId}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> RemoveOrder(int orderId)
+        {
+            try
+            {
+                await _service.RemoveOrder(orderId);
+                return Ok("Order removed successfully.");
+            }
+            catch (ArgumentException ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
+
+        [HttpPut("{orderId}/status")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> ChangeOrderStatus(int orderId, [FromQuery] bool isDelivered)
+        {
+            try
+            {
+                await _service.ChangeOrderStatus(orderId, isDelivered);
+                return Ok("Order status updated successfully.");
+            }
+            catch (ArgumentException ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
+
     }
 }

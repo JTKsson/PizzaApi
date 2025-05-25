@@ -20,6 +20,11 @@ namespace CloudDB.Core.Services
             await _repo.AddOrder(orderDto, userId);
         }
 
+        public async Task AddPremiumOrder(OrderCreateDTO orderDto, string userId)
+        {
+            await _repo.AddPremiumOrder(orderDto, userId);
+        }
+
         public Task DeleteOrder(int orderId)
         {
             throw new NotImplementedException();

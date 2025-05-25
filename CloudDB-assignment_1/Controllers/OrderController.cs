@@ -25,8 +25,19 @@ namespace CloudDB_assignment_1.Controllers
             if (orderDto == null) return BadRequest("Please enter order");
             if (userId == null) return Unauthorized("No authentication found");
 
-            await _service.AddOrder(orderDto, userId);
-            return Created();
+            if (User.IsInRole("PremiumUser"))
+            {
+                await _service.AddPremiumOrder(orderDto, userId);
+                return Created();
+            }
+            else
+            {
+                await _service.AddOrder(orderDto, userId);
+                return Created();
+            }
+
+
+            
         }
 
         [HttpGet]

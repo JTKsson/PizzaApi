@@ -13,7 +13,7 @@ namespace CloudDB.Domain.DTO
 
         public class OrderCreateDTO
         {
-            public ICollection<int> ProductIds { get; set; } = new List<int>();
+            public List<int> ProductIds { get; set; } = new List<int>();
         }
 
         public class OrderGetDTO

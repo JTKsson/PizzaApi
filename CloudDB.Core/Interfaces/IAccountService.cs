@@ -8,5 +8,6 @@ namespace CloudDB.Core.Interfaces
         Task<string> Login(UserLoginDTO user);
         Task<bool> Update(UserUpdateDTO user, string userId);
         Task<UserGetDTO> GetUser(string userId);
+        Task<bool> ChangeUserRole(string userId, string newRole);
     }
 }

@@ -124,5 +124,32 @@ namespace CloudDB.Core.Services
                 Phone = authedUser.PhoneNumber
             };
         }
+
+        public async Task<bool> ChangeUserRole(string userId, string newRole)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+                return false;
+
+            var currentRoles = await _userManager.GetRolesAsync(user);
+
+            if (currentRoles.Any())
+            {
+                var removeResult = await _userManager.RemoveFromRolesAsync(user, currentRoles);
+                if (!removeResult.Succeeded)
+                    return false;
+            }
+
+            if (!await _roleManager.RoleExistsAsync(newRole))
+            {
+                var roleResult = await _roleManager.CreateAsync(new IdentityRole(newRole));
+                if (!roleResult.Succeeded)
+                    return false;
+            }
+
+            var addResult = await _userManager.AddToRoleAsync(user, newRole);
+            return addResult.Succeeded;
+        }
+
     }
 }

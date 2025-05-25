@@ -81,12 +81,32 @@ namespace CloudDB_assignment_1.Controllers
             return Ok(result);
         }
 
-        [HttpGet("api/test-role")]
-        [Authorize(Roles = "RegularUser")]
-        public IActionResult TestRole()
+        //[HttpGet]
+        //[Authorize(Roles = "PremiumUser")]
+        //[Route("api/test-role")]
+        //public async Task<IActionResult> TestRole()
+        //{
+        //    return Ok("Role is working");
+        //}
+
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        [Route("api/upgrade-user")]
+        public async Task<IActionResult> UpgradeUser(string userId)
         {
-            var text = "Role works";
-            return Ok(text);
+            await _accountService.ChangeUserRole(userId, "PremiumUser");
+
+            return Ok("User is premium");
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        [Route("api/downgrade-user")]
+        public async Task<IActionResult> DowngradeUser(string userId)
+        {
+            await _accountService.ChangeUserRole(userId, "RegularUser");
+
+            return Ok("User is regular");
         }
     }
 }

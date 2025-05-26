@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CloudDB.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationUserContext))]
-    [Migration("20250515081541_create_identity_tables")]
+    [Migration("20250526172806_create_identity_tables")]
     partial class create_identity_tables
     {
         /// <inheritdoc />
@@ -31,6 +31,9 @@ namespace CloudDB.Infrastructure.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("AccessFailedCount")
+                        .HasColumnType("int");
+
+                    b.Property<int>("BenefitPoints")
                         .HasColumnType("int");
 
                     b.Property<string>("ConcurrencyStamp")
@@ -133,6 +136,9 @@ namespace CloudDB.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OrderId"));
+
+                    b.Property<bool>("IsDelivered")
+                        .HasColumnType("bit");
 
                     b.Property<int>("TotalPrice")
                         .HasColumnType("int");

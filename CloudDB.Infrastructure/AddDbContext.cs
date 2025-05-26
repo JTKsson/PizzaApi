@@ -11,7 +11,7 @@ namespace CloudDB.Infrastructure
                                                            IConfiguration configuration
                                                    )
         {
-            var connString = configuration.GetConnectionString("DBConnString");
+            var connString = configuration["DBConnString"];
 
             services.AddDbContext<ApplicationUserContext>(options =>
 

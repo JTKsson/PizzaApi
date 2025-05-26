@@ -15,7 +15,6 @@ namespace CloudDB.Infrastructure.Identity
         public virtual DbSet<Order> Orders { get; set; }
         public virtual DbSet<Product> Products { get; set; }
         public virtual DbSet<ApplicationUser> Users {  get; set; }
-        //public virtual DbSet<User> Users { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -28,11 +27,6 @@ namespace CloudDB.Infrastructure.Identity
             modelBuilder.Entity<Product>()
                .HasMany(p => p.Orders)
                .WithMany(o => o.Products);
-
-            //modelBuilder.Entity<ApplicationUser>()
-            //   .HasMany(u => u.Orders)
-            //   .WithOne(o => o.User)
-            //   .HasForeignKey(o => o.UserId);
         }
     }
 }

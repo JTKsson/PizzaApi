@@ -44,11 +44,11 @@ namespace CloudDB.Core.Services
             }
 
             var authSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
+                Encoding.UTF8.GetBytes(_config["JWT-Secret-Key"]));
 
             var token = new JwtSecurityToken(
-                issuer: _config["Jwt:Issuer"],
-                audience: _config["Jwt:Audience"],
+                issuer: _config["IssuerAudiens"],
+                audience: _config["IssuerAudiens"],
                 expires: DateTime.UtcNow.AddHours(10),
                 claims: authClaims,
                 signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
@@ -82,12 +82,10 @@ namespace CloudDB.Core.Services
 
             if (result.Succeeded)
             {
-                // Ensure the role exists
                 if (!await _roleManager.RoleExistsAsync(role))
                 {
                     await _roleManager.CreateAsync(new IdentityRole(role));
                 }
-                // Assign the role to the user
                 await _userManager.AddToRoleAsync(newUser, role);
             }
 

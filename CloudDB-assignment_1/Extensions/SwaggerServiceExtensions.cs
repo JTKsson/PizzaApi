@@ -1,6 +1,4 @@
-﻿using CloudDB.Infrastructure.Interfaces;
-using CloudDB.Infrastructure.Repos;
-using Microsoft.OpenApi.Models;
+﻿using Microsoft.OpenApi.Models;
 
 namespace CloudDB_assignment_1.Extensions
 {

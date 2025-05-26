@@ -1,5 +1,4 @@
-﻿using CloudDB.Domain.Entities;
-using static CloudDB.Domain.DTO.OrderDTO;
+﻿using static CloudDB.Domain.DTO.OrderDTO;
 
 namespace CloudDB.Core.Interfaces
 {

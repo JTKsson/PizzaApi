@@ -7,5 +7,10 @@ namespace CloudDB_assignment_1.Controllers
     [ApiController]
     public class CategoryController : ControllerBase
     {
+        [HttpGet]
+        public IActionResult Get()
+        {
+            return Ok("Hello world");
+        }
     }
 }

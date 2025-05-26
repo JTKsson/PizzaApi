@@ -11,12 +11,9 @@ using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var keyVaultName = builder.Configuration["KeyVaultName"];
-if (!string.IsNullOrEmpty(keyVaultName))
-{
-    var keyVaultUri = new Uri($"https://{keyVaultName}.vault.azure.net/");
+    var keyVaultUri = new Uri("https://tomasospizzakeyvault.vault.azure.net/");
     builder.Configuration.AddAzureKeyVault(keyVaultUri, new DefaultAzureCredential());
-}
+
 
 builder.Services.AddExtendedContext(builder.Configuration);
 

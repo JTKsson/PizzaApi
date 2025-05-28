@@ -43,7 +43,7 @@ namespace CloudDB_assignment_1.Controllers
             return Ok("User created");
         }
 
-        [HttpPost]
+        [HttpPut]
         [Authorize]
         [Route("api/update-user")]
         public async Task<IActionResult> Update(UserUpdateDTO user)
